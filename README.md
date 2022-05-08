@@ -16,7 +16,7 @@ Alfred workflow integration for the [Paperless-ngx](https://github.com/paperless
 
 1. Download the workflow in the github releases section
 2. Import the workflow in Alfred
-3. Setup the `PAPERLESS_INSTANCE` environment variable to point to your Paperless installation url. Example: `http://paperless.local:8000/` (Note: Do not omit the closing `/` for now).
+3. Setup the `PAPERLESS_INSTANCE` environment variable to point to your Paperless installation url. Example: `http://paperless.local:8000/`
 
 # Usage
 
@@ -34,8 +34,6 @@ Caching does not mean offline search. The search is handled by Paperless, and th
 # TODO
 * Nice GIF demonstrating the workflow
 * All around code cleanup & robustness
-  * Support `PAPERLESS_INSTANCE` with or without the closing `/`. For it should not be omitted, as the APIs endpoint are simply appended.
-  * ...
 * Front-end command dispatcher script
   * Should take the form of what Alfred qualifies as a filter script
   * Call into the proper backend script instead of letting the backend script handle everything

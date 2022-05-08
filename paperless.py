@@ -17,6 +17,8 @@ import alfred_encoder
 from cache import PaperlessCache
 
 PAPERLESS_INSTANCE = os.environ['PAPERLESS_INSTANCE']
+if not PAPERLESS_INSTANCE.endswith('/'):
+    PAPERLESS_INSTANCE += '/'
 PAPERLESS_API_ENDPOINT = PAPERLESS_INSTANCE + 'api/'
 SERVICE_NAME = 'com.nelatmani.paperless'
 
