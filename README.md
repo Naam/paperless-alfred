@@ -14,9 +14,18 @@ Alfred workflow integration for the [Paperless-ngx](https://github.com/paperless
 
 # Installation
 
+## From the Github release page
 1. Download the workflow in the github releases section
-2. Import the workflow in Alfred
+2. Open in finder to import the workflow in Alfred
 3. Setup the `PAPERLESS_INSTANCE` environment variable to point to your Paperless installation url. Example: `http://paperless.local:8000/`
+
+## From sources
+1. Clone the repo
+2. `cd paperless-alfred`
+3. `pip3 install -r requirements.txt --target=./`
+4. `zip -r paperless-alfred.alfredworkflow .`
+5. `open paperless-alfred.alfredworkflow`
+6. Go to step 3 from release page installation
 
 # Usage
 
