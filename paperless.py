@@ -43,7 +43,7 @@ def alfred_return(cache, status, alfred_result=None):
     return 0
 
 
-def convert_paperless_json_to_alfred(cache, token, json_result):
+def convert_paperless_json_to_alfred(cache, token, json_result, json_correspondents):
     alfred_results_list = alfred_encoder.AlfredResultList()
 
     if (json_result['count'] == 0):
@@ -79,7 +79,7 @@ def convert_paperless_json_to_alfred(cache, token, json_result):
         correspondent = "None"
         correspondent_id = result['correspondent']
         if correspondent_id:
-            correspondent = get_correspondent_name(token, correspondent_id) or "Error"
+            correspondent = get_correspondent_name(json_correspondents, correspondent_id)
 
         subtitle += subtitle_format.format(asn, correspondent, date)
         icon = {'path': 'pdf.png'}
@@ -104,12 +104,7 @@ def get_correspondents(token):
 
     return results.json()
 
-def get_correspondent_name(token, correspondent_id):
-    correspondents = get_correspondents(token)
-
-    if correspondents == PaperlessStatus.ERROR_CREDENTIAL_INVALID:
-        return None
-
+def get_correspondent_name(correspondents, correspondent_id):
     if correspondents['count'] == 0:
         return None
 
@@ -126,7 +121,11 @@ def search_documents(cache, token, term):
         return PaperlessStatus.ERROR_SEARCH_FAILED
 
     results = results.json()
-    documents = convert_paperless_json_to_alfred(cache, token, results)
+    correspondents = get_correspondents(token)
+    if correspondents == PaperlessStatus.ERROR_CREDENTIAL_INVALID:
+        return PaperlessStatus.ERROR_CREDENTIAL_INVALID
+
+    documents = convert_paperless_json_to_alfred(cache, token, results, correspondents)
     documents.send_to_alfred(cache)
 
     return PaperlessStatus.OK
