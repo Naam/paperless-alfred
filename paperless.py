@@ -58,6 +58,8 @@ def convert_paperless_json_to_alfred(cache, token, json_result):
             'documents/' + str(id) + '/thumb/'
         thumbnail_name = '{}.png'.format(id)
         document_name = '{}.pdf'.format(id)
+        subtitle_format = "ASN: {} | Correspondent: {} | Date created: {}"
+
         if not cache.exists(thumbnail_name):
             cache.cache_item(token, thumbnail_url, thumbnail_name)
         if cache.exists(document_name):
@@ -73,21 +75,53 @@ def convert_paperless_json_to_alfred(cache, token, json_result):
             title = title[:80] + "..."
         asn = result['archive_serial_number'] or "None"
         date = parse(result['added']).date()
-        subtitle += "ASN: {} | Date created: {}".format(asn, date)
+
+        correspondent = "None"
+        correspondent_id = result['correspondent']
+        if correspondent_id:
+            correspondent = get_correspondent_name(token, correspondent_id) or "Error"
+
+        subtitle += subtitle_format.format(asn, correspondent, date)
         icon = {'path': 'pdf.png'}
         alfred_results_list.append(
             alfred_encoder.AlfredResult(title, subtitle, arg, icon=icon, type=type))
 
     return alfred_results_list
 
+def query_api(token, endpoint, query=None):
+    url = PAPERLESS_API_ENDPOINT + endpoint
+    auth_header = {'Authorization': "Token " + token}
+
+    if query:
+        url += urllib.parse.quote(query)
+    return requests.get(url, headers=auth_header)
+
+def get_correspondents(token):
+    connect_endpoint = 'correspondents/?format=json'
+    results = query_api(token, connect_endpoint)
+    if results.status_code != requests.codes.ok:
+        return PaperlessStatus.ERROR_CREDENTIAL_INVALID
+
+    return results.json()
+
+def get_correspondent_name(token, correspondent_id):
+    correspondents = get_correspondents(token)
+
+    if correspondents == PaperlessStatus.ERROR_CREDENTIAL_INVALID:
+        return None
+
+    if correspondents['count'] == 0:
+        return None
+
+    for correspondent in correspondents["results"]:
+        if correspondent["id"] == correspondent_id:
+            return correspondent["name"]
+
+    return None
 
 def search_documents(cache, token, term):
     connect_endpoint = 'documents/?query='
-    url = PAPERLESS_API_ENDPOINT + connect_endpoint
-
-    auth_header = {'Authorization': "Token " + token}
-    url += urllib.parse.quote(term)
-    results = requests.get(url, headers=auth_header)
+    results = query_api(token, connect_endpoint, term)
     if results.status_code != requests.codes.ok:
         return PaperlessStatus.ERROR_SEARCH_FAILED
 
