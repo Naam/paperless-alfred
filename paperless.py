@@ -24,10 +24,10 @@ SERVICE_NAME = 'com.nelatmani.paperless'
 
 
 class PaperlessStatus(enum.Enum):
-    OK = 0,
-    ERROR_CREDENTIAL_INVALID = enum.auto(),
-    ERROR_CREDENTIAL_NOT_FOUND = enum.auto(),
-    ERROR_SEARCH_FAILED = enum.auto(),
+    OK = 0
+    ERROR_CREDENTIAL_INVALID = enum.auto()
+    ERROR_CREDENTIAL_NOT_FOUND = enum.auto()
+    ERROR_SEARCH_FAILED = enum.auto()
     ERROR_INVALID_ARGUMENT = enum.auto()
 
 
