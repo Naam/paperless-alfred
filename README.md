@@ -31,7 +31,7 @@ Alfred workflow integration for the [Paperless-ngx](https://github.com/paperless
 
 1. Run `pplc username password` to connect to your Paperless instance. This workflow does not retain your credentials. Instead, it will pull a token from Paperless and store it securely into your keychain.
 2. Run `ppl <your search>` to search in your documents
-   1. Use the arrow keys or the mouse to select one document and hit `[ENTER]` to view it. The search supports matrix is purely dictated by Paperless[[1](https://paperless-ng.readthedocs.io/en/latest/api.html#searching-for-documents)]:
+   1. Use the arrow keys or the mouse to select one document and hit `[ENTER]` to view it. The search supports matrix is purely dictated by Paperless[[1](https://docs.paperless-ngx.com/api/#searching-for-documents)]:
         > Only a small subset of filtering parameters are supported.
 
    2. Once you viewed it once, it's cached on your system, and presented to Alfred as such. Which allows for all the file triggers to take place (copy, move, send, info, ...)
