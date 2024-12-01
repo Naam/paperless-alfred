@@ -6,7 +6,10 @@ from os import path
 
 
 class AlfredResult():
-    def __init__(self, title, subtitle, arg, icon="", type='default'):
+    def __init__(self, title, subtitle, arg, icon=None, type='default'):
+        if not icon:
+            icon = {}
+
         self.title = title
         self.subtitle = subtitle
         self.arg = arg
