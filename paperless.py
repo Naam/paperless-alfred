@@ -12,6 +12,7 @@ import requests
 import urllib.parse
 from os import path
 from dateutil.parser import parse
+from unicodedata import normalize
 
 import alfred_encoder
 from cache import PaperlessCache
@@ -88,17 +89,17 @@ def convert_paperless_json_to_alfred(cache, token, json_result, json_corresponde
 
     return alfred_results_list
 
-def query_api(token, endpoint, query=None):
+def query_api(token, endpoint, params=None):
     url = PAPERLESS_API_ENDPOINT + endpoint
     auth_header = {'Authorization': "Token " + token}
 
-    if query:
-        url += urllib.parse.quote(query)
+    if params:
+        url += "?" + urllib.parse.urlencode(params)
     return requests.get(url, headers=auth_header)
 
 def get_correspondents(token):
-    connect_endpoint = 'correspondents/?format=json'
-    results = query_api(token, connect_endpoint)
+    connect_endpoint = 'correspondents/'
+    results = query_api(token, connect_endpoint, {"format": "json"})
     if results.status_code != requests.codes.ok:
         return PaperlessStatus.ERROR_CREDENTIAL_INVALID
 
@@ -115,8 +116,9 @@ def get_correspondent_name(correspondents, correspondent_id):
     return None
 
 def search_documents(cache, token, term):
-    connect_endpoint = 'documents/?query='
-    results = query_api(token, connect_endpoint, term)
+    connect_endpoint = 'documents/'
+    term = normalize('NFC', term)
+    results = query_api(token, connect_endpoint, {"query": term})
     if results.status_code != requests.codes.ok:
         return PaperlessStatus.ERROR_SEARCH_FAILED
 
