@@ -47,29 +47,29 @@ def alfred_return(cache, status, alfred_result=None):
 def convert_paperless_json_to_alfred(cache, token, json_result, json_correspondents):
     alfred_results_list = alfred_encoder.AlfredResultList()
 
-    if (json_result['count'] == 0):
+    if json_result['count'] == 0:
         alfred_results_list.append(
             alfred_encoder.AlfredResult("No result found",
                                         "Try another search term", "")
         )
 
     for result in json_result['results']:
-        id = result['id']
+        file_id = result['id']
         thumbnail_url = PAPERLESS_API_ENDPOINT + \
-            'documents/' + str(id) + '/thumb/'
-        thumbnail_name = '{}.png'.format(id)
-        document_name = '{}.pdf'.format(id)
+            'documents/' + str(file_id) + '/thumb/'
+        thumbnail_name = '{}.png'.format(file_id)
+        document_name = '{}.pdf'.format(file_id)
         subtitle_format = "ASN: {} | Correspondent: {} | Date created: {}"
 
         if not cache.exists(thumbnail_name):
             cache.cache_item(token, thumbnail_url, thumbnail_name)
         if cache.exists(document_name):
-            type = 'file'
+            result_type = 'file'
             arg = cache.get_path(document_name)
             subtitle = "↓ "
         else:
-            type = 'default'
-            arg = id
+            result_type = 'default'
+            arg = file_id
             subtitle = "⇣ "
         title = str(result['title'])
         if len(str(result['title'])) > 80:
@@ -85,7 +85,7 @@ def convert_paperless_json_to_alfred(cache, token, json_result, json_corresponde
         subtitle += subtitle_format.format(asn, correspondent, date)
         icon = {'path': 'pdf.png'}
         alfred_results_list.append(
-            alfred_encoder.AlfredResult(title, subtitle, arg, icon=icon, type=type))
+            alfred_encoder.AlfredResult(title, subtitle, arg, icon=icon, _type=result_type))
 
     return alfred_results_list
 
@@ -140,7 +140,7 @@ def open_document(cache, token, arg):
             'documents/' + str(arg) + '/preview/'
         cache.cache_item(token, document_url, document_name)
         cache.sync()
-    except:
+    except Exception:
         document_name = path.basename(arg)
 
     subprocess.call(["open", cache.get_path(document_name)])
@@ -200,8 +200,7 @@ def main():
             cache, search_documents(cache, token, args.query))
 
     if args.download:
-        status = alfred_return(cache, open_document(
-            cache, token, args.download[0]))
+        status = alfred_return(cache, open_document(cache, token, args.download[0]))
 
     del cache
     return status
