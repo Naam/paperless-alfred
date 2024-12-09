@@ -1,0 +1,13 @@
+*.alfredworkflow
+.idea
+bin
+certifi*
+charset*
+*dateutil*
+idna*
+importlib*
+keyring*
+six*
+requests*
+urllib3*
+zipp*

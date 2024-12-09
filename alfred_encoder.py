@@ -2,16 +2,18 @@
 
 import json
 import sys
-from os import path
 
 
-class AlfredResult():
-    def __init__(self, title, subtitle, arg, icon="", type='default'):
+class AlfredResult:
+    def __init__(self, title, subtitle, arg, icon=None, _type='default'):
+        if not icon:
+            icon = {}
+
         self.title = title
         self.subtitle = subtitle
         self.arg = arg
         self.icon = icon
-        self.type = type
+        self.type = _type
 
 
 class AlfredResultEncoder(json.JSONEncoder):
@@ -19,7 +21,7 @@ class AlfredResultEncoder(json.JSONEncoder):
         return o.__dict__
 
 
-class AlfredResultList():
+class AlfredResultList:
     alfred_dic = {'items': []}
 
     def append(self, alfred_result):
@@ -31,7 +33,7 @@ class AlfredResultList():
                 thumbnail_name = "{}.png".format(int(item.arg))
                 if cache.exists(thumbnail_name):
                     item.icon['path'] = cache.get_path(thumbnail_name)
-            except:
+            except Exception:
                 item.icon['path'] = item.arg
 
         sys.stdout.write(json.dumps(
