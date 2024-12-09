@@ -15,7 +15,7 @@ Alfred workflow integration for the [Paperless-ngx](https://github.com/paperless
 # Installation
 
 ## From the Github release page
-1. Download the workflow in the GitHub releases section. It is a `.zip` file; rename it to `.alfredworkflow` to import. A better solution would be to include the `.alfredworkflow` inside the `.zip` for the GitHub release process.
+1. Download the workflow in the GitHub releases section. It is a `.zip` file. After extraction, you should find a `.alfredworkflow` to import.
 2. Open in finder to import the workflow in Alfred
 3. Set up the `PAPERLESS_INSTANCE` environment variable to point to your Paperless installation url. Example: `http://paperless.local:8000/`
 
